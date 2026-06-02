@@ -108,7 +108,7 @@ const trackDetailsMap: Record<string, {
     artistPhoto: "https://i.ytimg.com/vi/5k4llr0of_k/hq720.jpg?sqp=-oaymwEnCNAFEJQDSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLAH0IF3wkiOU3qVAhmB9wmj7oxE6g",
     monthlyListeners: "85,420",
     genreTags: ["Viral", "Kicau Mania", "Dash Music"],
-    animatedImageUrl: "https://media.tenor.com/OoG1CF2T3QIAAAAj/kucing-scuba-scuba-cat.gif"
+    animatedImageUrl: "/kicau-scuba-cat.gif"
   },
   'mbg-mas-bahlil-ganteng': {
     lyrics: [
@@ -468,6 +468,11 @@ export default function NowPlayingSidebar({
               <img
                 src={details.animatedImageUrl}
                 alt={`${track.title} animated GIF`}
+                onError={(event) => {
+                  const image = event.currentTarget;
+                  image.onerror = null;
+                  image.src = track.coverUrl;
+                }}
                 className={`w-full h-full object-cover transition-transform duration-700 ${
                   isPlaying ? 'scale-105' : 'scale-100'
                 }`}
@@ -476,6 +481,11 @@ export default function NowPlayingSidebar({
               <img
                 src={track.coverUrl}
                 alt={track.title}
+                onError={(event) => {
+                  const image = event.currentTarget;
+                  image.onerror = null;
+                  image.src = "https://placehold.co/600x600/121212/1ed760?text=Dash+Music";
+                }}
                 className={`w-full h-full object-cover transition-transform duration-700 ${
                   isPlaying ? 'scale-105' : 'scale-100'
                 }`}
@@ -485,7 +495,7 @@ export default function NowPlayingSidebar({
 
           <div className="flex justify-between items-start gap-2">
             <div className="min-w-0 flex-1">
-              <h2 className="text-xl font-extrabold text-white tracking-tight lead-tight hover:text-primary cursor-pointer transition-colors truncate">
+              <h2 className="text-xl font-extrabold text-white tracking-tight leading-tight hover:text-primary cursor-pointer transition-colors truncate">
                 {track.title}
               </h2>
               <p className="text-xs text-on-surface-variant font-medium truncate">
