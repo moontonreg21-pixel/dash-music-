@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --color-primary: #53e076;
+  --color-primary-container: #1db954;
+  --color-on-primary: #003914;
+  --color-background: #120d0d;
+  --color-surface: #171212;
+  --color-surface-variant: #3a3333;
+  --color-surface-container-low: #201a1a;
+  --color-surface-container: #241e1e;
+  --color-surface-container-high: #2e2928;
+  --color-surface-container-highest: #3a3333;
+  --color-on-surface: #ebe0df;
+  --color-on-surface-variant: #bccbb9;
+}
+
+/* Custom scrollbar hiding */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Album art spin & dynamic animations */
+@keyframes pulse-ring {
+  0% { transform: scale(0.95); opacity: 0.5; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+  100% { transform: scale(0.95); opacity: 0.5; }
+}
+
+@keyframes loader-progress {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+.pulse-ring {
+  animation: pulse-ring 3s infinite ease-in-out;
+}
+
+.animate-loader {
+  animation: loader-progress 2.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+

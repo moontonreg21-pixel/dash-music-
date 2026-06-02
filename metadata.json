@@ -1,0 +1,6 @@
+{
+  "name": "Sonic Depth",
+  "description": "An immersive, high-energy music streaming application featuring a dark aesthetic with modern corporate design, rich lists, categorized browsing, library management, and a gorgeous real-time now playing screen.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
