@@ -27,6 +27,8 @@ const trackDetailsMap: Record<string, {
   monthlyListeners: string;
   genreTags: string[];
   animatedImageUrl?: string;
+  videoEmbedUrl?: string;
+  contentType?: 'music' | 'podcast';
 }> = {
   'starboy': {
     lyrics: [
@@ -400,6 +402,20 @@ const trackDetailsMap: Record<string, {
     artistPhoto: "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=400&auto=format&fit=crop&q=80",
     monthlyListeners: "3,820,115",
     genreTags: ["Chillhop", "Lofi Beats", "Focus"]
+  },
+  'podcast-stoicism': {
+    lyrics: [
+      "Episode tentang dasar-dasar stoicism dan cara melatih keteguhan diri.",
+      "Membahas bagaimana filsafat Stoikisme melihat emosi, kontrol diri, dan respons terhadap masalah.",
+      "Cocok untuk pendengar yang ingin belajar tetap tenang saat menghadapi tekanan.",
+      "Sumber episode: kanal YouTube Ardhianzy."
+    ],
+    bio: "Ardhianzy membahas Stoikisme sebagai cara berpikir yang praktis: fokus pada hal yang bisa dikendalikan, menjaga pikiran tetap jernih, dan membangun ketahanan diri dalam hidup sehari-hari.",
+    artistPhoto: "/podcast-stoicism.jpg",
+    monthlyListeners: "13 min 52 sec",
+    genreTags: ["Stoicism", "Filsafat", "Podcast"],
+    videoEmbedUrl: "https://www.youtube.com/embed/lplwONPDUHI",
+    contentType: 'podcast'
   }
 };
 
@@ -438,6 +454,7 @@ export default function NowPlayingSidebar({
   const isLiked = likedSongIds.includes(track.id);
   const [copiedLink, setCopiedLink] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
+  const isPodcast = details.contentType === 'podcast';
 
   const activeLyricIndex = useMemo(() => {
     if (details.lyrics.length === 0) return 0;
@@ -473,8 +490,16 @@ export default function NowPlayingSidebar({
         
         {/* Cover Album Frame matching exactly the user requested layout */}
         <div className="space-y-4">
-          <div className="relative group aspect-square rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-surface-container">
-            {details.animatedImageUrl ? (
+          <div className={`relative group ${isPodcast ? 'aspect-video' : 'aspect-square'} rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-surface-container`}>
+            {details.videoEmbedUrl ? (
+              <iframe
+                src={`${details.videoEmbedUrl}?rel=0&modestbranding=1`}
+                title={`${track.title} podcast video`}
+                className="w-full h-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              />
+            ) : details.animatedImageUrl ? (
               <img
                 src={details.animatedImageUrl}
                 alt={`${track.title} animated GIF`}
@@ -564,7 +589,7 @@ export default function NowPlayingSidebar({
           
           <div className="flex justify-between items-center relative z-10">
             <h3 className="text-xs font-black uppercase tracking-wider text-primary">
-              Lyrics
+              {isPodcast ? 'Episode Notes' : 'Lyrics'}
             </h3>
           </div>
 
@@ -607,7 +632,7 @@ export default function NowPlayingSidebar({
             {/* Title card overlay exactly styled */}
             <div className="absolute inset-0 bg-gradient-to-t from-[#151111] via-black/20 to-black/30 p-4 flex flex-col justify-between">
               <span className="text-[8.5px] font-extrabold uppercase tracking-widest bg-black/60 text-white rounded-full px-2.5 py-1 w-fit border border-white/10 backdrop-blur-sm">
-                About the artist
+                {isPodcast ? 'About the podcast' : 'About the artist'}
               </span>
               
               <div className="space-y-0.5">
@@ -616,7 +641,7 @@ export default function NowPlayingSidebar({
                 </h4>
                 <div className="flex items-center gap-1 text-[9px] text-gray-300 font-bold">
                   <Users className="w-3 h-3 text-primary shrink-0" />
-                  <span>{details.monthlyListeners} monthly listeners</span>
+                  <span>{details.monthlyListeners} {isPodcast ? 'episode length' : 'monthly listeners'}</span>
                 </div>
               </div>
             </div>
@@ -646,7 +671,7 @@ export default function NowPlayingSidebar({
                   : 'bg-white text-black hover:bg-primary hover:text-black hover:scale-102 active:scale-98'
               }`}
             >
-              {isFollowing ? '✓ Following Artist' : 'Follow Artist'}
+              {isFollowing ? (isPodcast ? 'Saved Podcast' : '✓ Following Artist') : (isPodcast ? 'Save Podcast' : 'Follow Artist')}
             </button>
 
             {track.youtubeUrl && (

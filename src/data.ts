@@ -33,6 +33,7 @@ export const images = {
   onRepeat: '/on-repeat.png',
   rockMix: '/rock-mix.png',
   popMix: '/pop-mix.png',
+  podcastStoicism: '/podcast-stoicism.jpg',
 
   // Good Morning cards
   dailyMix1: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCOrfWV7kcvw7EMYxWvPWAkhDR_TrpGtPgSBPMAN9bDDwb1P3QPUAsiAsDoWT1X9muGq6Okye2oU_qBEciY-VAUqg8Z_9feMJ5RhHu-J00IG-uCq7YyIlTCCmm2JEmVNnZWBckJiUUDRQkf7ihOAwEwo6NpnEzzOnAggl5VpXqfPvSBK2Cc6epirLnefUk3cB2j61hESAGMOgO7N3F3IiBy8sAYpxFSNuPudgZrwDHohr5Os-JK2bbbMV_a-s4v1TBw_O0HQ1Lp_Q',
@@ -246,6 +247,17 @@ export const allTracks: Track[] = [
     coverUrl: images.onePiece,
     duration: '2:35',
     durationSeconds: 155
+  },
+  {
+    id: 'podcast-stoicism',
+    title: 'Filosofi Stoicism: Belajar Menjadi Tak Tergoyahkan (Filsafat Stoikisme/Filosofi Teras) | Part 2',
+    artist: 'Ardhianzy',
+    album: 'Podcast Episode',
+    coverUrl: images.podcastStoicism,
+    duration: '13:52',
+    durationSeconds: 832,
+    youtubeUrl: 'https://youtu.be/lplwONPDUHI?si=lCxOHvmfvQUGW8Hi',
+    youtubeEmbedUrl: 'https://www.youtube.com/embed/lplwONPDUHI'
   }
 ];
 
@@ -291,7 +303,7 @@ export const browseCategories: BrowseCategory[] = [
   { id: 'pop', name: 'Pop', color: '#8d67ab', coverUrl: images.pop, tracks: [getTrack('starboy'), getTrack('scott-street')] },
   { id: 'hip-hop', name: 'Hip-Hop', color: '#ba5d07', coverUrl: images.hiphop, tracks: [getTrack('starboy'), getTrack('dj-fyp-tiktok')] },
   { id: 'rock', name: 'Rock', color: '#e8115b', coverUrl: images.rock, tracks: [getTrack('banda-neira-patah-tumbuh')] },
-  { id: 'podcasts', name: 'Podcasts', color: '#27856a', coverUrl: images.podcasts, tracks: [getTrack('scott-street')] },
+  { id: 'podcasts', name: 'Podcasts', color: '#27856a', coverUrl: images.podcasts, tracks: [getTrack('podcast-stoicism')] },
   { id: 'mood', name: 'Mood', color: '#1e3264', coverUrl: images.mood, tracks: [getTrack('scott-street'), getTrack('perunggu-ini-abadi')] },
   { id: 'gaming', name: 'Gaming', color: '#503750', coverUrl: images.gaming, tracks: [getTrack('dj-jangan-malu-malu-boy'), getTrack('dj-fyp-tiktok')] },
   { id: 'latin', name: 'Latin', color: '#e1118c', coverUrl: images.latin, tracks: [getTrack('starboy')] },

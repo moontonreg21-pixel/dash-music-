@@ -65,6 +65,13 @@ export default function HomeView({
       behavior: 'smooth',
     });
   };
+  const podcastEpisode = getTrack('podcast-stoicism');
+  const podcastSelected = currentTrack?.id === podcastEpisode.id;
+  const podcastPlaying = podcastSelected && isPlaying;
+  const handlePodcastTabClick = () => {
+    setActiveTab('podcasts');
+    onPlayTrack(podcastEpisode);
+  };
 
   const quickPicks = [
     {
@@ -339,7 +346,7 @@ export default function HomeView({
             Music
           </button>
           <button
-            onClick={() => setActiveTab('podcasts')}
+            onClick={handlePodcastTabClick}
             className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${activeTab === 'podcasts' ? 'bg-primary text-black' : 'bg-surface-container-high text-on-surface hover:border-on-surface-variant border border-transparent'}`}
           >
             Podcasts
@@ -366,6 +373,99 @@ export default function HomeView({
           </div>
         )}
 
+        {activeTab === 'podcasts' ? (
+          <section className="overflow-hidden rounded-2xl border border-white/5 bg-[#111] shadow-2xl animate-in fade-in slide-in-from-right-4 duration-300">
+            <div
+              className="relative min-h-[300px] overflow-hidden"
+              style={{
+                backgroundImage: `linear-gradient(90deg, rgba(0,0,0,0.94), rgba(0,0,0,0.62) 52%, rgba(0,0,0,0.88)), url(${podcastEpisode.coverUrl})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center'
+              }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-t from-[#111] via-transparent to-black/50" />
+              <div className="relative z-10 flex flex-col md:flex-row md:items-end gap-5 p-5 md:p-8 min-h-[300px]">
+                <img
+                  src={podcastEpisode.coverUrl}
+                  alt={podcastEpisode.title}
+                  className="h-36 w-36 md:h-40 md:w-40 rounded-md object-cover border border-white/10 shadow-2xl"
+                />
+                <div className="max-w-4xl space-y-3">
+                  <p className="text-xs font-black text-white/90">Podcast Episode</p>
+                  <h2 className="text-3xl md:text-5xl font-black leading-tight tracking-tight text-white">
+                    {podcastEpisode.title}
+                  </h2>
+                  <p className="text-2xl font-extrabold text-white">Ardhianzy</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-[#242424] px-5 md:px-8 py-4">
+              <div className="flex flex-wrap items-center gap-2 text-xs font-bold text-[#b3b3b3]">
+                <span>Video</span>
+                <span>•</span>
+                <span>May 4, 2025</span>
+                <span>•</span>
+                <span>13 min 52 sec</span>
+                <span className="ml-1 h-1 w-28 rounded-full bg-white/25">
+                  <span className="block h-full w-2/3 rounded-full bg-white/80" />
+                </span>
+              </div>
+
+              <div className="mt-5 flex items-center gap-4">
+                <button
+                  onClick={() => {
+                    if (podcastSelected) {
+                      onPlayPauseToggle();
+                      return;
+                    }
+                    onPlayTrack(podcastEpisode);
+                  }}
+                  className="h-14 w-14 rounded-full bg-primary text-black flex items-center justify-center shadow-xl hover:scale-105 active:scale-95 transition-transform"
+                  aria-label={podcastPlaying ? 'Pause podcast' : 'Play podcast'}
+                >
+                  {podcastPlaying ? (
+                    <Pause className="w-6 h-6 fill-black" />
+                  ) : (
+                    <Play className="w-6 h-6 fill-black ml-1" />
+                  )}
+                </button>
+                <button className="text-on-surface-variant hover:text-white transition-colors" aria-label="Download podcast">
+                  <Download className="w-8 h-8" />
+                </button>
+                <button className="text-on-surface-variant hover:text-white transition-colors" aria-label="Save podcast">
+                  <PlusCircle className="w-8 h-8" />
+                </button>
+                <button className="text-on-surface-variant hover:text-white transition-colors" aria-label="More podcast options">
+                  <MoreHorizontal className="w-8 h-8" />
+                </button>
+              </div>
+
+              <div className="mt-6 rounded-lg bg-white/[0.03] border border-white/5 p-3">
+                <button
+                  onClick={() => onPlayTrack(podcastEpisode)}
+                  className="group flex w-full items-center gap-3 text-left"
+                >
+                  <img
+                    src={podcastEpisode.coverUrl}
+                    alt={podcastEpisode.title}
+                    className="h-14 w-14 rounded object-cover border border-white/10"
+                  />
+                  <span className="min-w-0 flex-1">
+                    <span className={`block truncate text-sm font-black ${podcastSelected ? 'text-primary' : 'text-white'}`}>
+                      {podcastEpisode.title}
+                    </span>
+                    <span className="block truncate text-xs text-on-surface-variant">
+                      {podcastPlaying ? 'Now playing' : 'Ardhianzy • Podcast Episode'}
+                    </span>
+                  </span>
+                  <span className="text-xs font-bold text-on-surface-variant">{podcastEpisode.duration}</span>
+                </button>
+              </div>
+            </div>
+          </section>
+        ) : (
+          <>
         {/* Section 1: Quick Picks */}
         <section>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
@@ -514,6 +614,8 @@ export default function HomeView({
             ))}
           </div>
         </section>
+          </>
+        )}
       </div>
 
       {/* Settings Panel Backdrop Slider */}
