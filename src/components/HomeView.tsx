@@ -12,12 +12,14 @@ import {
   Settings,
   Shuffle,
   Play,
+  Pause,
   Sliders,
   ChevronRight
 } from 'lucide-react';
 
 interface HomeViewProps {
   onPlayTrack: (track: Track) => void;
+  onPlayPauseToggle: () => void;
   currentTrack: Track | null;
   isPlaying: boolean;
   registeredUser?: RegisteredUser | null;
@@ -26,6 +28,7 @@ interface HomeViewProps {
 
 export default function HomeView({
   onPlayTrack,
+  onPlayPauseToggle,
   currentTrack,
   isPlaying,
   registeredUser,
@@ -40,7 +43,6 @@ export default function HomeView({
   })();
 
   const [activeTab, setActiveTab] = useState<'all' | 'music' | 'podcasts'>('all');
-  const [activeQuickPickId, setActiveQuickPickId] = useState<string | null>(null);
   const [activePlaylistId, setActivePlaylistId] = useState<string | null>(null);
   const [showSettings, setShowSettings] = useState(false);
   const [currentPlaybackSpeed, setCurrentPlaybackSpeed] = useState('1.0x');
@@ -84,32 +86,32 @@ export default function HomeView({
       track: getTrack('lyoid-you'),
     },
     {
-      id: 'hindia',
-      title: 'Hindia',
+      id: 'hindia-membasuh',
+      title: 'Hindia - membasuh',
       coverUrl: getTrack('hindia').coverUrl,
-      track: getTrack('hindia'),
+      track: getTrack('hindia-membasuh'),
     },
     {
       id: 'tenxy',
-      title: 'Tenxy',
+      title: 'Tenxy-Berubah',
       coverUrl: getTrack('tenxy').coverUrl,
       track: getTrack('tenxy'),
     },
     {
-      id: 'no-surprises-radio',
-      title: 'No Surprises Radio',
+      id: 'no-surprises',
+      title: 'No Surprises',
       coverUrl: getTrack('no-surprises-radio').coverUrl,
       track: getTrack('no-surprises-radio'),
     },
     {
       id: 'the-script',
-      title: 'The Script',
+      title: 'Man who cant be moved',
       coverUrl: getTrack('the-script').coverUrl,
       track: getTrack('the-script'),
     },
     {
       id: 'dj-fyp-tiktok',
-      title: 'DJ FYP Tiktok',
+      title: 'DJ Blac hole',
       coverUrl: getTrack('dj-fyp-tiktok').coverUrl,
       track: getTrack('dj-fyp-tiktok'),
     },
@@ -269,9 +271,8 @@ export default function HomeView({
                   <button
                     key={track.id}
                     onClick={() => onPlayTrack(track)}
-                    className={`group grid w-full grid-cols-[36px_minmax(0,1.5fr)_minmax(120px,1fr)_120px_44px] items-center gap-3 rounded-md px-2 py-2 text-left transition-colors ${
-                      isCurrent ? 'bg-primary/10 text-primary' : 'text-white hover:bg-white/10'
-                    }`}
+                    className={`group grid w-full grid-cols-[36px_minmax(0,1.5fr)_minmax(120px,1fr)_120px_44px] items-center gap-3 rounded-md px-2 py-2 text-left transition-colors ${isCurrent ? 'bg-primary/10 text-primary' : 'text-white hover:bg-white/10'
+                      }`}
                   >
                     <span className="text-center text-sm text-on-surface-variant group-hover:hidden">
                       {index + 1}
@@ -369,21 +370,22 @@ export default function HomeView({
         <section>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
             {quickPicks.map((item) => {
-              const isCurrent =
-                activeQuickPickId === item.id ||
-                (!activeQuickPickId && currentTrack?.id === item.track.id);
+              const isCurrent = currentTrack?.id === item.track.id;
               const playingThis = isCurrent && isPlaying;
 
               return (
                 <button
                   key={item.id}
                   onClick={() => {
-                    setActiveQuickPickId(item.id);
+                    if (isCurrent) {
+                      onPlayPauseToggle();
+                      return;
+                    }
                     onPlayTrack(item.track);
                   }}
                   className={`group h-12 sm:h-14 flex items-center text-left rounded overflow-hidden border transition-all cursor-pointer active:scale-98 ${isCurrent ? 'bg-primary/15 border-primary/35 ring-1 ring-primary/20' : 'bg-white/10 border-transparent hover:bg-white/15 hover:border-white/10'
                     }`}
-                  aria-label={`Play ${item.title}`}
+                  aria-label={playingThis ? `Pause ${item.title}` : `Play ${item.title}`}
                 >
                   <div className="relative h-full aspect-square shrink-0 overflow-hidden bg-surface-container-highest">
                     <img
@@ -397,7 +399,11 @@ export default function HomeView({
                     {item.title}
                   </span>
                   <span className={`ml-auto mr-3 w-8 h-8 rounded-full bg-primary text-black items-center justify-center shadow-lg shrink-0 transition-all ${isCurrent ? 'flex scale-100' : 'hidden scale-95 group-hover:flex group-hover:scale-100'}`}>
-                    <Play className={`w-4 h-4 fill-black ${playingThis ? 'animate-pulse' : ''}`} />
+                    {playingThis ? (
+                      <Pause className="w-4 h-4 fill-black" />
+                    ) : (
+                      <Play className="w-4 h-4 fill-black ml-0.5" />
+                    )}
                   </span>
                 </button>
               );

@@ -33,6 +33,8 @@ export default function SearchView({
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showProfileDetailModal, setShowProfileDetailModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const userDisplayName = registeredUser?.name?.trim() || 'Awan';
+  const userInitial = userDisplayName.match(/[a-z]/i)?.[0].toUpperCase() || 'A';
 
   // Filter tracks dynamically based on user input
   const filteredTracks = useMemo(() => {
@@ -60,14 +62,14 @@ export default function SearchView({
             <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full ring-2 ring-[#120d0d]" />
           </button>
           
-          {/* User Profile Button with Letter 'A' and dropdown menu */}
+          {/* User Profile Button with the signed-in user's initial */}
           <div className="relative">
             <button
               onClick={() => setShowProfileMenu(!showProfileMenu)}
               className="w-9 h-9 rounded-full bg-primary hover:bg-[#34bc62] active:scale-95 transition-all flex items-center justify-center shrink-0 border border-white/10 font-black text-black text-sm relative cursor-pointer"
               aria-label="User profile options menu"
             >
-              A
+              {userInitial}
               <span className="absolute bottom-0 right-0 w-2 h-2 bg-emerald-500 rounded-full border border-[#120d0d]" />
             </button>
 
@@ -82,7 +84,7 @@ export default function SearchView({
                   <div className="p-3 border-b border-white/5 bg-black/20">
                     <p className="text-[10px] text-on-surface-variant uppercase font-bold tracking-wider">Signed in as</p>
                     <p className="text-xs font-extrabold text-white truncate">
-                      {registeredUser?.name || 'Awan'}
+                      {userDisplayName}
                     </p>
                     <p className="text-[9px] text-primary font-bold tracking-wider">
                       ★ Premium Account
@@ -296,7 +298,7 @@ export default function SearchView({
             
             <div className="text-center space-y-2">
               <div className="w-14 h-14 rounded-full bg-primary text-black font-black text-xl flex items-center justify-center mx-auto border-2 border-white/5 shadow-lg shadow-primary/20">
-                A
+                {userInitial}
               </div>
               <div>
                 <h3 className="text-sm font-extrabold text-white font-sans uppercase tracking-wider">
@@ -311,7 +313,7 @@ export default function SearchView({
             <div className="space-y-2 bg-black/30 p-3 rounded-xl border border-white/5 text-[11px] font-semibold">
               <div className="flex justify-between py-1.5 border-b border-white/5">
                 <span className="text-on-surface-variant">Nama</span>
-                <span className="text-white">{registeredUser?.name || 'Awan'}</span>
+                <span className="text-white">{userDisplayName}</span>
               </div>
               <div className="flex justify-between py-1.5 border-b border-white/5">
                 <span className="text-on-surface-variant">E-mail</span>

@@ -55,13 +55,6 @@ export default function LibraryView({
       {/* Top Navbar */}
       <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-md py-4 flex justify-between items-center px-4">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full overflow-hidden border border-surface-variant flex items-center justify-center shrink-0">
-            <img 
-              alt="Profile" 
-              className="w-full h-full object-cover" 
-              src={images.profile}
-            />
-          </div>
           <h1 className="text-2xl font-extrabold tracking-tight select-none text-white">Your Library</h1>
         </div>
         <div className="flex items-center gap-4 text-on-surface">

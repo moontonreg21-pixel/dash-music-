@@ -41,7 +41,7 @@ const trackDetailsMap: Record<string, {
       "I'm a motherf*ckin' Starboy"
     ],
     bio: "The Weeknd (Abel Tesfaye) is a Canadian singer-songwriter and record producer known for his sonic versatility, dark lyrics, and instantly recognizable falsetto vocals.",
-    artistPhoto: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&auto=format&fit=crop&q=80",
+    artistPhoto: "/starboy.jpg",
     monthlyListeners: "114,249,150",
     genreTags: ["R&B", "Pop", "Synthpop"]
   },
@@ -264,7 +264,7 @@ const trackDetailsMap: Record<string, {
       "Mungkin di lain waktu?"
     ],
     bio: "DJ Jangan Malu Malu Boy, track viral pilihan Dash Music yang diputar langsung dari YouTube.",
-    artistPhoto: "https://i.ytimg.com/vi/8vPsQINkL_U/hq720.jpg?sqp=-oaymwEnCNAFEJQDSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLBWubUVEfAUtq-3r6b6fmcNKikcNA",
+    artistPhoto: "/dj-jangan-malu-malu-boy.jpg",
     monthlyListeners: "430,000",
     genreTags: ["DJ", "Viral", "TikTok"]
   },
@@ -328,7 +328,7 @@ const trackDetailsMap: Record<string, {
       "Tumuju roso sampurno"
     ],
     bio: "Warox Ponorogo dari Kajawi, track budaya pilihan Dash Music yang diputar langsung dari YouTube.",
-    artistPhoto: "https://i.ytimg.com/an_webp/JEtqqmW1G8o/mqdefault_6s.webp?du=3000&sqp=CMbx-NAG&rs=AOn4CLCrfYypG0e-7oUohyKaP5OWNbJ3iQ",
+    artistPhoto: "/warox-ponorogo.jpg",
     monthlyListeners: "210,000",
     genreTags: ["Jawa", "Budaya", "Kajawi"]
   },
@@ -424,7 +424,17 @@ export default function NowPlayingSidebar({
   likedSongIds,
   onToggleLike
 }: NowPlayingSidebarProps) {
-  const details = trackDetailsMap[track.id] || defaultDetailFallback;
+  const mappedDetails = trackDetailsMap[track.id];
+  const details = mappedDetails || {
+    ...defaultDetailFallback,
+    bio: `${track.title} dari ${track.artist || 'Dash Music'} adalah track pilihan Dash Music yang mengikuti cover dan identitas musik yang sedang kamu putar.`,
+    artistPhoto: track.coverUrl,
+    genreTags: [
+      track.album || 'Dash Music',
+      track.artist || 'Playlist',
+      'Now Playing'
+    ].filter(Boolean)
+  };
   const isLiked = likedSongIds.includes(track.id);
   const [copiedLink, setCopiedLink] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
@@ -470,7 +480,8 @@ export default function NowPlayingSidebar({
                 alt={`${track.title} animated GIF`}
                 onError={(event) => {
                   const image = event.currentTarget;
-                  image.onerror = null;
+                  if (image.dataset.fallbackApplied === "true") return;
+                  image.dataset.fallbackApplied = "true";
                   image.src = track.coverUrl;
                 }}
                 className={`w-full h-full object-cover transition-transform duration-700 ${
@@ -483,8 +494,9 @@ export default function NowPlayingSidebar({
                 alt={track.title}
                 onError={(event) => {
                   const image = event.currentTarget;
-                  image.onerror = null;
-                  image.src = "https://placehold.co/600x600/121212/1ed760?text=Dash+Music";
+                  if (image.dataset.fallbackApplied === "true") return;
+                  image.dataset.fallbackApplied = "true";
+                  image.src = "/category-pop.png";
                 }}
                 className={`w-full h-full object-cover transition-transform duration-700 ${
                   isPlaying ? 'scale-105' : 'scale-100'
@@ -581,6 +593,15 @@ export default function NowPlayingSidebar({
             <img 
               src={details.artistPhoto} 
               alt={track.artist} 
+              onError={(event) => {
+                const image = event.currentTarget;
+                if (image.dataset.fallbackApplied === "true") {
+                  image.src = "/category-pop.png";
+                  return;
+                }
+                image.dataset.fallbackApplied = "true";
+                image.src = track.coverUrl;
+              }}
               className="w-full h-full object-cover brightness-[0.7]" 
             />
             {/* Title card overlay exactly styled */}

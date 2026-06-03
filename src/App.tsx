@@ -438,6 +438,7 @@ export default function App() {
             {activeTab === 'home' && (
               <HomeView
                 onPlayTrack={handlePlayTrack}
+                onPlayPauseToggle={handlePlayPauseToggle}
                 currentTrack={currentTrack}
                 isPlaying={isPlaying}
                 registeredUser={registeredUser}
