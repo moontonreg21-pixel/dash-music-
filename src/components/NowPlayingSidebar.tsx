@@ -405,15 +405,16 @@ const trackDetailsMap: Record<string, {
   },
   'podcast-stoicism': {
     lyrics: [
-      "Episode tentang dasar-dasar stoicism dan cara melatih keteguhan diri.",
-      "Membahas bagaimana filsafat Stoikisme melihat emosi, kontrol diri, dan respons terhadap masalah.",
-      "Cocok untuk pendengar yang ingin belajar tetap tenang saat menghadapi tekanan.",
+      "Episode tentang cara otak sering membuat kita salah mengambil keputusan.",
+      "Membahas kenapa pikiran bisa gampang terdistraksi, lupa, dan merasa yakin pada hal yang belum tentu benar.",
+      "Obrolan ini mengajak pendengar melatih critical thinking agar tidak mudah tertipu asumsi sendiri.",
+      "Cocok untuk kamu yang ingin berpikir lebih jernih, lebih teliti, dan tidak gampang ikut arus.",
       "Sumber episode: kanal YouTube Ardhianzy."
     ],
-    bio: "Ardhianzy membahas Stoikisme sebagai cara berpikir yang praktis: fokus pada hal yang bisa dikendalikan, menjaga pikiran tetap jernih, dan membangun ketahanan diri dalam hidup sehari-hari.",
+    bio: "Ardhianzy membahas cara kerja pikiran manusia, kebiasaan mental yang bikin kita mudah keliru dan pelupa, serta pentingnya critical thinking untuk memeriksa informasi sebelum percaya atau mengambil keputusan.",
     artistPhoto: "/podcast-stoicism.jpg",
     monthlyListeners: "13 min 52 sec",
-    genreTags: ["Stoicism", "Filsafat", "Podcast"],
+    genreTags: ["Critical Thinking", "Mindset", "Podcast"],
     videoEmbedUrl: "https://www.youtube.com/embed/lplwONPDUHI",
     contentType: 'podcast'
   }

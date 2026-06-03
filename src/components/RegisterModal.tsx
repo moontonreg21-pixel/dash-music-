@@ -11,7 +11,7 @@ export default function RegisterModal({ isOpen, onClose, onRegisterSuccess }: Re
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  
+
   const [error, setError] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -42,7 +42,7 @@ export default function RegisterModal({ isOpen, onClose, onRegisterSuccess }: Re
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSuccess(true);
-      
+
       // Store user details in localStorage
       localStorage.setItem('isRegistered', 'true');
       localStorage.setItem('registeredUser', JSON.stringify({ name: name.trim(), email: email.trim(), favoriteGenre: 'ambient' }));
@@ -58,20 +58,20 @@ export default function RegisterModal({ isOpen, onClose, onRegisterSuccess }: Re
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 select-none">
       {/* Backdrop with elegant glassmorphism blur */}
-      <div 
+      <div
         className="absolute inset-0 bg-black/85 backdrop-blur-md transition-opacity duration-300"
         onClick={onClose}
       />
 
       {/* Modal Container */}
       <div className="relative w-full max-w-[365px] bg-[#171212] border border-white/5 rounded-2xl overflow-hidden shadow-[0_24px_50px_rgba(0,0,0,0.8)] transform transition-all duration-300 scale-100 z-10 animate-in zoom-in-95 duration-200">
-        
+
         {/* Dynamic Glow Background */}
         <div className="absolute -top-24 -left-20 w-56 h-56 bg-primary/10 rounded-full blur-[60px] pointer-events-none" />
         <div className="absolute -bottom-24 -right-20 w-56 h-56 bg-emerald-500/5 rounded-full blur-[60px] pointer-events-none" />
 
         {/* Close Button */}
-        <button 
+        <button
           onClick={onClose}
           className="absolute top-3 right-3 text-on-surface-variant hover:text-white bg-white/5 hover:bg-white/10 w-7 h-7 rounded-full flex items-center justify-center transition-all z-20 text-xs"
           title="Tutup"
@@ -86,7 +86,7 @@ export default function RegisterModal({ isOpen, onClose, onRegisterSuccess }: Re
             <div className="relative w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center border border-primary/40 animate-pulse">
               <Check className="w-8 h-8 text-primary stroke-[3]" />
             </div>
-            
+
             <div className="space-y-1.5">
               <h3 className="text-xl font-black tracking-tight text-white uppercase font-sans">
                 Registrasi Berhasil!
@@ -104,7 +104,7 @@ export default function RegisterModal({ isOpen, onClose, onRegisterSuccess }: Re
         ) : (
           /* Register Form Screen */
           <div className="p-5 space-y-4">
-            
+
             {/* Header Branding with Custom Spotify-style Letter D Logo */}
             <div className="flex flex-col items-center text-center space-y-2">
               <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center relative shadow-lg shadow-primary/10">
@@ -134,7 +134,7 @@ export default function RegisterModal({ isOpen, onClose, onRegisterSuccess }: Re
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-3">
-              
+
               {/* Field: Username / Full Name */}
               <div className="space-y-1">
                 <label className="text-[10px] text-on-surface-variant font-bold uppercase tracking-wider block">
@@ -147,7 +147,7 @@ export default function RegisterModal({ isOpen, onClose, onRegisterSuccess }: Re
                   <input
                     type="text"
                     required
-                    placeholder="Contoh: Budi Santoso"
+                    placeholder="Contoh: Dasep hikmat"
                     value={name}
                     onChange={(e) => {
                       setName(e.target.value);
@@ -170,7 +170,7 @@ export default function RegisterModal({ isOpen, onClose, onRegisterSuccess }: Re
                   <input
                     type="email"
                     required
-                    placeholder="budi@example.com"
+                    placeholder="Dasep@gmail.com"
                     value={email}
                     onChange={(e) => {
                       setEmail(e.target.value);

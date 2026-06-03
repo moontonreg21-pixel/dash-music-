@@ -70,7 +70,6 @@ export default function HomeView({
   const podcastPlaying = podcastSelected && isPlaying;
   const handlePodcastTabClick = () => {
     setActiveTab('podcasts');
-    onPlayTrack(podcastEpisode);
   };
 
   const quickPicks = [

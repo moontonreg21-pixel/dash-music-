@@ -250,7 +250,7 @@ export const allTracks: Track[] = [
   },
   {
     id: 'podcast-stoicism',
-    title: 'Filosofi Stoicism: Belajar Menjadi Tak Tergoyahkan (Filsafat Stoikisme/Filosofi Teras) | Part 2',
+    title: 'Kalau Kamu Mau Punya CRITICAL THINKING, Jangan Skip Obrolan Ini!',
     artist: 'Ardhianzy',
     album: 'Podcast Episode',
     coverUrl: images.podcastStoicism,
