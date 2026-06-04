@@ -95,7 +95,7 @@ export default function HomeView({
       id: 'hindia-membasuh',
       title: 'Hindia - membasuh',
       coverUrl: getTrack('hindia').coverUrl,
-      track: getTrack('hindia-membasuh'),
+      track: getTrack('hindia'),
     },
     {
       id: 'tenxy',
