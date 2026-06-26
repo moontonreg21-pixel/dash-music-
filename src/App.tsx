@@ -12,6 +12,7 @@ import LibraryView from './components/LibraryView';
 import MiniPlayer from './components/MiniPlayer';
 import NowPlayingView from './components/NowPlayingView';
 import RegisterModal from './components/RegisterModal';
+import LoginModal from './components/LoginModal';
 import WhatsNewView from './components/WhatsNewView';
 import NowPlayingSidebar from './components/NowPlayingSidebar';
 import { 
@@ -57,10 +58,12 @@ export default function App() {
   const youtubePlayerRef = useRef<HTMLIFrameElement | null>(null);
   const [activeTab, setActiveTab] = useState<AppTab>('home');
   
-  // User registration state
+  // User registration & login state
   const [isRegistered, setIsRegistered] = useState<boolean>(() => localStorage.getItem('isRegistered') === 'true');
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => localStorage.getItem('isLoggedIn') === 'true');
   const [registeredUser, setRegisteredUser] = useState<RegisteredUser | null>(() => readRegisteredUser());
   const [showRegisterModal, setShowRegisterModal] = useState<boolean>(false);
+  const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
 
   // Track playback state
   const [currentTrack, setCurrentTrack] = useState<Track>(() => getTrack('starboy'));
@@ -100,8 +103,12 @@ export default function App() {
 
   // Tab activation gating wrapper
   const handleSelectTab = (tab: AppTab) => {
-    if (tab === 'search' && !isRegistered) {
-      setShowRegisterModal(true);
+    if (tab === 'search' && !isLoggedIn) {
+      if (isRegistered) {
+        setShowLoginModal(true);
+      } else {
+        setShowRegisterModal(true);
+      }
       return;
     }
     setActiveTab(tab);
@@ -109,8 +116,12 @@ export default function App() {
 
   // Play audio track helper
   const handlePlayTrack = (track: Track) => {
-    if (!isRegistered) {
-      setShowRegisterModal(true);
+    if (!isLoggedIn) {
+      if (isRegistered) {
+        setShowLoginModal(true);
+      } else {
+        setShowRegisterModal(true);
+      }
       return;
     }
     setCurrentTrack(track);
@@ -120,8 +131,12 @@ export default function App() {
 
   // Toggle play/pause simulation
   const handlePlayPauseToggle = () => {
-    if (!isRegistered) {
-      setShowRegisterModal(true);
+    if (!isLoggedIn) {
+      if (isRegistered) {
+        setShowLoginModal(true);
+      } else {
+        setShowRegisterModal(true);
+      }
       return;
     }
     setIsPlaying(!isPlaying);
@@ -129,11 +144,24 @@ export default function App() {
 
   // Handle Logout Action
   const handleLogout = () => {
-    localStorage.removeItem('isRegistered');
-    localStorage.removeItem('registeredUser');
-    setIsRegistered(false);
-    setRegisteredUser(null);
+    localStorage.removeItem('isLoggedIn');
+    setIsLoggedIn(false);
     setActiveTab('home');
+  };
+
+  // Handle Login Success — redirect to dashboard
+  const handleLoginSuccess = (username: string) => {
+    setIsLoggedIn(true);
+    setRegisteredUser(readRegisteredUser());
+    setActiveTab('home');
+  };
+
+  // Handle Register Success — show login modal for them to login
+  const handleRegisterSuccess = () => {
+    setIsRegistered(true);
+    setShowRegisterModal(false);
+    // Immediately prompt the user to login with their new credentials
+    setShowLoginModal(true);
   };
 
   // Handle switching to next song in list
@@ -751,9 +779,21 @@ export default function App() {
       <RegisterModal
         isOpen={showRegisterModal}
         onClose={() => setShowRegisterModal(false)}
-        onRegisterSuccess={() => {
-          setIsRegistered(true);
-          setRegisteredUser(readRegisteredUser());
+        onRegisterSuccess={handleRegisterSuccess}
+        onSwitchToLogin={() => {
+          setShowRegisterModal(false);
+          setShowLoginModal(true);
+        }}
+      />
+
+      {/* Login Modal — shown after registration or when user tries to access features */}
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        onLoginSuccess={handleLoginSuccess}
+        onSwitchToRegister={() => {
+          setShowLoginModal(false);
+          setShowRegisterModal(true);
         }}
       />
     </div>

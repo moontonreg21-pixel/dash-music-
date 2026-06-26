@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
-import { Check, Mail, Lock, User } from 'lucide-react';
+import { Check, Lock, User, LogIn } from 'lucide-react';
 
-interface RegisterModalProps {
+interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onRegisterSuccess: (username: string) => void;
-  onSwitchToLogin?: () => void;
+  onLoginSuccess: (username: string) => void;
+  onSwitchToRegister: () => void;
 }
 
-export default function RegisterModal({ isOpen, onClose, onRegisterSuccess, onSwitchToLogin }: RegisterModalProps) {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+export default function LoginModal({ isOpen, onClose, onLoginSuccess, onSwitchToRegister }: LoginModalProps) {
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   const [error, setError] = useState('');
@@ -24,37 +23,60 @@ export default function RegisterModal({ isOpen, onClose, onRegisterSuccess, onSw
     setError('');
 
     // Input validations
-    if (!name.trim()) {
-      setError('Masukkan nama lengkap Anda!');
+    if (!username.trim()) {
+      setError('Masukkan username Anda!');
       return;
     }
-    if (!email.trim() || !email.includes('@')) {
-      setError('Masukkan alamat email yang valid!');
-      return;
-    }
-    if (password.length < 6) {
-      setError('Kata sandi harus minimal 6 karakter!');
+    if (!password.trim()) {
+      setError('Masukkan kata sandi Anda!');
       return;
     }
 
     setIsSubmitting(true);
 
-    // Simulate database registration call
+    // Simulate login verification
     setTimeout(() => {
       setIsSubmitting(false);
+
+      // Validate against stored registration data
+      const storedUserRaw = localStorage.getItem('registeredUser');
+      const storedPassword = localStorage.getItem('registeredPassword');
+
+      if (!storedUserRaw || !storedPassword) {
+        setError('Akun tidak ditemukan. Silakan daftar terlebih dahulu!');
+        return;
+      }
+
+      let storedUser: { name: string; email: string; favoriteGenre: string };
+      try {
+        storedUser = JSON.parse(storedUserRaw);
+      } catch {
+        setError('Data akun rusak. Silakan daftar ulang!');
+        return;
+      }
+
+      // Check username match (case-insensitive)
+      if (storedUser.name.toLowerCase() !== username.trim().toLowerCase()) {
+        setError('Username tidak ditemukan!');
+        return;
+      }
+
+      // Check password match
+      if (storedPassword !== password) {
+        setError('Kata sandi salah!');
+        return;
+      }
+
+      // Login success!
       setIsSuccess(true);
+      localStorage.setItem('isLoggedIn', 'true');
 
-      // Store user details in localStorage (including password for login validation)
-      localStorage.setItem('isRegistered', 'true');
-      localStorage.setItem('registeredUser', JSON.stringify({ name: name.trim(), email: email.trim(), favoriteGenre: 'ambient' }));
-      localStorage.setItem('registeredPassword', password);
-
-      // delay 1.8 seconds to show success checkmark and let the user feel the premium flow
+      // Delay to show success animation, then callback
       setTimeout(() => {
-        onRegisterSuccess(name);
+        onLoginSuccess(storedUser.name);
         onClose();
-      }, 1800);
-    }, 1200);
+      }, 1600);
+    }, 900);
   };
 
   return (
@@ -81,7 +103,7 @@ export default function RegisterModal({ isOpen, onClose, onRegisterSuccess, onSw
           ✕
         </button>
 
-        {/* Success Screen Representation */}
+        {/* Success Screen */}
         {isSuccess ? (
           <div className="py-12 px-6 flex flex-col items-center justify-center text-center space-y-4 animate-in fade-in zoom-in-75 duration-300">
             {/* Pulsing Success Ring */}
@@ -91,10 +113,10 @@ export default function RegisterModal({ isOpen, onClose, onRegisterSuccess, onSw
 
             <div className="space-y-1.5">
               <h3 className="text-xl font-black tracking-tight text-white uppercase font-sans">
-                Registrasi Berhasil!
+                Login Berhasil!
               </h3>
               <p className="text-on-surface-variant text-[11px] max-w-xs mx-auto leading-relaxed">
-                Akun berhasil dibuat! Silakan <strong className="text-primary font-bold">login</strong> dengan username dan kata sandi yang sudah didaftarkan.
+                Selamat datang kembali di <strong className="text-primary font-bold">D Music</strong>, <span className="text-white font-semibold">{username}</span>! Memuat dashboard...
               </p>
             </div>
 
@@ -104,7 +126,7 @@ export default function RegisterModal({ isOpen, onClose, onRegisterSuccess, onSw
             </div>
           </div>
         ) : (
-          /* Register Form Screen */
+          /* Login Form Screen */
           <div className="p-5 space-y-4">
 
             {/* Header Branding with Custom Spotify-style Letter D Logo */}
@@ -119,10 +141,10 @@ export default function RegisterModal({ isOpen, onClose, onRegisterSuccess, onSw
               </div>
               <div>
                 <h3 className="text-base font-extrabold text-white font-sans uppercase tracking-wider">
-                  Daftar Akun D Music
+                  Masuk ke D Music
                 </h3>
                 <p className="text-[10px] text-on-surface-variant leading-relaxed max-w-[260px] mx-auto">
-                  Cari lagu favorit dan dengerin musik bebas tanpa batas.
+                  Login dengan username dan kata sandi yang sudah didaftarkan.
                 </p>
               </div>
             </div>
@@ -137,10 +159,10 @@ export default function RegisterModal({ isOpen, onClose, onRegisterSuccess, onSw
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-3">
 
-              {/* Field: Username / Full Name */}
+              {/* Field: Username */}
               <div className="space-y-1">
                 <label className="text-[10px] text-on-surface-variant font-bold uppercase tracking-wider block">
-                  Nama Lengkap / Username
+                  Username
                 </label>
                 <div className="relative">
                   <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-on-surface-variant">
@@ -149,33 +171,10 @@ export default function RegisterModal({ isOpen, onClose, onRegisterSuccess, onSw
                   <input
                     type="text"
                     required
-                    placeholder="Contoh: Dasep hikmat"
-                    value={name}
+                    placeholder="Masukkan username Anda"
+                    value={username}
                     onChange={(e) => {
-                      setName(e.target.value);
-                      if (error) setError('');
-                    }}
-                    className="w-full bg-black/40 text-[11px] p-2 pl-8.5 rounded-lg border border-white/5 text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all font-semibold"
-                  />
-                </div>
-              </div>
-
-              {/* Field: Email */}
-              <div className="space-y-1">
-                <label className="text-[10px] text-on-surface-variant font-bold uppercase tracking-wider block">
-                  E-mail
-                </label>
-                <div className="relative">
-                  <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-on-surface-variant">
-                    <Mail className="w-3.5 h-3.5" />
-                  </span>
-                  <input
-                    type="email"
-                    required
-                    placeholder="Dasep@gmail.com"
-                    value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
+                      setUsername(e.target.value);
                       if (error) setError('');
                     }}
                     className="w-full bg-black/40 text-[11px] p-2 pl-8.5 rounded-lg border border-white/5 text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all font-semibold"
@@ -195,7 +194,7 @@ export default function RegisterModal({ isOpen, onClose, onRegisterSuccess, onSw
                   <input
                     type="password"
                     required
-                    placeholder="Minimal 6 karakter"
+                    placeholder="Masukkan kata sandi"
                     value={password}
                     onChange={(e) => {
                       setPassword(e.target.value);
@@ -215,20 +214,23 @@ export default function RegisterModal({ isOpen, onClose, onRegisterSuccess, onSw
                 {isSubmitting ? (
                   <span className="inline-block animate-spin border-2 border-black border-t-transparent rounded-full w-4 h-4" />
                 ) : (
-                  'Daftar Sekarang'
+                  <>
+                    <LogIn className="w-3.5 h-3.5" />
+                    Masuk Sekarang
+                  </>
                 )}
               </button>
             </form>
 
-            {/* Switch to Login Link */}
+            {/* Switch to Register Link */}
             <div className="text-center pt-1">
               <p className="text-[10px] text-on-surface-variant">
-                Sudah punya akun?{' '}
+                Belum punya akun?{' '}
                 <button
-                  onClick={onSwitchToLogin}
+                  onClick={onSwitchToRegister}
                   className="text-primary font-bold hover:underline cursor-pointer transition-colors"
                 >
-                  Masuk Sekarang
+                  Daftar Sekarang
                 </button>
               </p>
             </div>
